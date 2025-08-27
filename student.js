@@ -115,24 +115,31 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 function estimateETASeconds(distanceMeters, speedKmh) {
-  const v = speedKmh && speedKmh > 3 ? speedKmh : 18;
+  if (!distanceMeters || distanceMeters <= 0) return 0;   // distance নাই = 0s ETA
+  const v = (speedKmh && speedKmh > 3) ? speedKmh : 18;  // min speed fallback
   const mps = v / 3.6;
   return Math.round(distanceMeters / mps);
 }
+
 function formatDistance(meters) {
   if (meters == null) return "—";
-  return meters >= 1000 ? (meters/1000).toFixed(2)+" km" : `${Math.round(meters)} m`;
+  if (meters >= 1000) return (meters / 1000).toFixed(2) + " km";
+  return Math.round(meters) + " m";
 }
+
 function formatTimeAgo(ts) {
   if (!ts) return "—";
   const s = Math.floor((Date.now() - ts) / 1000);
-  if (s<5) return "just now";
-  if (s<60) return `${s}s ago`;
-  const m = Math.floor(s/60);
-  if (m<60) return `${m}m ago`;
-  const h = Math.floor(m/60);
-  return `${h}h ago`;
+  if (s < 5) return "just now";
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
 }
+
 setInterval(() => {
   if (lastUpdateTs) timeVal.textContent = formatTimeAgo(lastUpdateTs);
 }, 1000);

@@ -48,7 +48,11 @@ startBtn.addEventListener("click", () => {
       if (speedKmh < 0.5) speedKmh = 0;
 
       if (!myMarker) {
-        myMarker = L.marker([latitude, longitude]).addTo(map).bindPopup("Bus");
+const busIdInput = document.getElementById("busId"); 
+myMarker = L.marker([latitude, longitude])
+  .addTo(map)
+  .bindPopup(`Bus ID: ${busId}`);
+
         map.setView([latitude, longitude], 16);
       } else {
         myMarker.setLatLng([latitude, longitude]);
@@ -61,8 +65,8 @@ startBtn.addEventListener("click", () => {
         accuracyCircle = L.circle([latitude, longitude], { radius: accuracy || 15 }).addTo(map);
       }
 
-      // Firebase push every 2 sec
-      if (now - lastWriteAt >= 2000) {
+      // Firebase push every 1 sec
+      if (now - lastWriteAt >= 1000) {
         db.ref(`buses/${busId}/last`).set({
           lat: latitude,
           lng: longitude,
