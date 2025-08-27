@@ -1,0 +1,176 @@
+/* Apply map only if it exists */
+/* Map must take full screen height */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body:has(#map) {
+  background: #fff; /* normal background for map pages */
+  display: block;
+}
+
+body:has(.container) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
+}
+
+.container h1 {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.container a {
+  text-decoration: none;
+}
+
+.container button {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.container button:first-of-type {
+  background: #007bff;
+  color: #fff;
+}
+
+.container button:first-of-type:hover {
+  background: #0056b3;
+}
+
+.container button:last-of-type {
+  background: #28a745;
+  color: #fff;
+}
+
+.container button:last-of-type:hover {
+  background: #1e7e34;
+}
+
+#map {
+  width: 100%;
+  height: calc(100vh - 56px); /* subtract navbar height */
+}
+/* Navbar tweaks */
+.navbar {
+  flex-wrap: wrap;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+.navbar .form-control {
+  max-width: 200px;
+}
+
+/* Status badge spacing */
+#statusBadge {
+  font-size: 0.9rem;
+  padding: 0.4em 0.6em;
+}
+
+/* === Responsive Design === */
+
+/* Tablets (≤ 992px) */
+@media (max-width: 992px) {
+  .navbar .form-control {
+    width: 140px;
+  }
+  .navbar .btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  #map {
+    height: 85vh;
+  }
+  .navbar .d-flex.align-items-center.gap-3.small {
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobiles (≤ 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .navbar .d-flex {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .navbar .form-control {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  .navbar .btn {
+    flex: 1 1 auto;
+    min-width: 100px;
+  }
+  #map {
+    height: 80vh;
+  }
+  .navbar .d-flex.align-items-center.gap-3.small {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Small Mobiles (≤ 480px) */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+  .navbar-brand {
+    font-size: 1rem;
+  }
+  .navbar .form-control,
+  .navbar .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  #statusBadge {
+    display: block;
+    margin-top: 0.5rem;
+  }
+  .navbar .d-flex.align-items-center.gap-3.small {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  #map {
+    height: 75vh;
+  }
+
+  .container {
+    padding: 2rem 1rem;
+  }
+  .container h1 {
+    font-size: 1.4rem;
+  }
+  .container button {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+}
