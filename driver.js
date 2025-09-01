@@ -25,6 +25,7 @@ startBtn.addEventListener("click", () => {
 
   currentBusId = busId;
 
+  // Set status in Firebase
   db.ref(`buses/${busId}/status`).set("live");
 
   if (!("geolocation" in navigator)) {
@@ -37,6 +38,7 @@ startBtn.addEventListener("click", () => {
       const { latitude, longitude, accuracy } = pos.coords;
       const now = Date.now();
 
+      // Calculate speed
       let speedKmh = 0;
       if (lastPoint) {
         const dt = (now - lastPoint.time) / 1000;
@@ -45,27 +47,27 @@ startBtn.addEventListener("click", () => {
           speedKmh = (dist / dt) * 3.6;
         }
       }
-      if (speedKmh < 0.5) speedKmh = 0;
+      if (speedKmh < 0.5) speedKmh = 0; // noise filter
 
+      // Marker
       if (!myMarker) {
-const busIdInput = document.getElementById("busId"); 
-myMarker = L.marker([latitude, longitude])
-  .addTo(map)
-  .bindPopup(`Bus ID: ${busId}`);
-
+        myMarker = L.marker([latitude, longitude])
+          .addTo(map)
+          .bindPopup(`Bus ID: ${busId}`);
         map.setView([latitude, longitude], 16);
       } else {
         myMarker.setLatLng([latitude, longitude]);
         map.panTo([latitude, longitude]);
       }
 
+      // Accuracy circle
       if (accuracyCircle) {
         accuracyCircle.setLatLng([latitude, longitude]).setRadius(accuracy || 15);
       } else {
         accuracyCircle = L.circle([latitude, longitude], { radius: accuracy || 15 }).addTo(map);
       }
 
-      // Firebase push every 1 sec
+      // Firebase update every 1 sec
       if (now - lastWriteAt >= 1000) {
         db.ref(`buses/${busId}/last`).set({
           lat: latitude,
@@ -73,7 +75,6 @@ myMarker = L.marker([latitude, longitude])
           time: now,
           speedKmh: Number(speedKmh.toFixed(1)),
         });
-        db.ref(`buses/${busId}/path`).push({ lat: latitude, lng: longitude, time: now });
         lastWriteAt = now;
       }
 
@@ -83,6 +84,7 @@ myMarker = L.marker([latitude, longitude])
     { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
   );
 
+  // UI update
   startBtn.disabled = true;
   endBtn.disabled = false;
   statusBadge.textContent = "live";
@@ -96,9 +98,14 @@ endBtn.addEventListener("click", () => {
     watchId = null;
   }
   if (currentBusId) {
-    db.ref(`buses/${currentBusId}/status`).set("ended");
+    const ref = db.ref(`buses/${currentBusId}`);
+    // update status
+    ref.child("status").set("ended");
+    // delete last
+    ref.child("last").remove();
   }
 
+  // UI update
   startBtn.disabled = false;
   endBtn.disabled = true;
   statusBadge.textContent = "ended";
