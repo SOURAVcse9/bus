@@ -12,7 +12,7 @@ const trackBtn     = document.getElementById("trackBtn");
 const speedSpan    = document.getElementById("speed");
 const latSpan      = document.getElementById("lat");
 const lngSpan      = document.getElementById("lng");
-const locationSpan = document.getElementById("location");
+// const locationSpan = document.getElementById("location");
 const statusSpan   = document.getElementById("status");
 const updatedSpan  = document.getElementById("updated");
 
@@ -127,7 +127,7 @@ trackBtn.addEventListener("click", () => {
     latSpan.textContent      = lat.toFixed(6);
     lngSpan.textContent      = lng.toFixed(6);
     updatedSpan.textContent  = formatTimeAgo(time);
-    locationSpan.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    // locationSpan.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
   });
 
   // ---------------------- BUS PATH ----------------------
